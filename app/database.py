@@ -5,8 +5,8 @@ from sqlalchemy.orm import sessionmaker
 settings = config.Settings()
 
 def get_database_url():
-    
-    return f"postgresql+psycopg://{settings.DATABASE_USER}:{settings.DATABASE_PASSWORD}@localhost:{settings.DATABASE_PORT}/{settings.DATABASE_NAME}"
+
+    return f"postgresql+psycopg://{settings.DATABASE_USER}:{settings.DATABASE_PASSWORD}@{settings.DATABASE_HOST}:{settings.DATABASE_PORT}/{settings.DATABASE_NAME}"
 
 url = get_database_url()
 

@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Placement Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Inter:wght@400;500;600;700&family=Special+Elite&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============ AUTH SCREEN ============ -->
+  <section id="authScreen" class="board board--center">
+    <div class="card card--auth" id="authCard">
+      <div class="tack" aria-hidden="true"></div>
+      <h1 class="brand">Placement Tracker</h1>
+      <p class="brand-sub">A logbook for every application you file.</p>
+
+      <div class="auth-tabs" role="tablist" aria-label="Authentication mode">
+        <button class="auth-tab is-active" data-auth-tab="login" role="tab" aria-selected="true">Sign in</button>
+        <button class="auth-tab" data-auth-tab="register" role="tab" aria-selected="false">Register</button>
+      </div>
+
+      <form id="loginForm" class="paper-form" novalidate>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" name="email" required autocomplete="username" />
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input type="password" name="password" required autocomplete="current-password" />
+        </label>
+        <p class="form-msg" data-msg-for="loginForm"></p>
+        <button type="submit" class="btn btn--stamp">Sign in</button>
+      </form>
+
+      <form id="registerForm" class="paper-form hidden" novalidate>
+        <label class="field">
+          <span>Full name</span>
+          <input type="text" name="name" required autocomplete="name" />
+        </label>
+        <label class="field">
+          <span>Email</span>
+          <input type="email" name="email" required autocomplete="email" />
+        </label>
+        <label class="field">
+          <span>Password</span>
+          <input type="password" name="password" required autocomplete="new-password" minlength="6" />
+        </label>
+        <p class="form-msg" data-msg-for="registerForm"></p>
+        <button type="submit" class="btn btn--stamp">Create account</button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ MAIN APP ============ -->
+  <section id="appScreen" class="board hidden">
+    <header class="topbar">
+      <div class="topbar-left">
+        <span class="brand-mark">Placement Tracker</span>
+      </div>
+      <div class="topbar-right">
+        <span id="userGreeting" class="user-greeting"></span>
+        <button id="logoutBtn" class="btn btn--ghost">Log out</button>
+      </div>
+    </header>
+
+    <nav class="folder-tabs" aria-label="Sections">
+      <button class="folder-tab is-active" data-view="companies">Companies visiting</button>
+      <button class="folder-tab" data-view="applications">My applications</button>
+      <button class="folder-tab" data-view="addCompany">File a new drive</button>
+    </nav>
+
+    <main class="board-content">
+
+      <!-- Companies view -->
+      <div id="view-companies" class="view is-active">
+        <div class="view-head">
+          <h2>Companies visiting</h2>
+          <p class="view-sub">Every drive on file. Apply straight from the card.</p>
+        </div>
+        <p class="empty-note hidden" data-empty-for="companies">No drives have been filed yet — be the first to add one.</p>
+        <div id="companiesGrid" class="cards-grid"></div>
+      </div>
+
+      <!-- Applications view -->
+      <div id="view-applications" class="view">
+        <div class="view-head">
+          <h2>My applications</h2>
+          <p class="view-sub">Everything you've submitted, stamped by its current stage.</p>
+        </div>
+        <p class="empty-note hidden" data-empty-for="applications">Nothing filed yet — apply to a company to start your logbook.</p>
+        <div id="applicationsGrid" class="cards-grid"></div>
+      </div>
+
+      <!-- Add company view -->
+      <div id="view-addCompany" class="view">
+        <div class="view-head">
+          <h2>File a new drive</h2>
+          <p class="view-sub">Add a company that's visiting so others can apply too.</p>
+        </div>
+        <div class="card card--form">
+          <div class="tack" aria-hidden="true"></div>
+          <form id="companyForm" class="paper-form" novalidate>
+            <label class="field">
+              <span>Company name</span>
+              <input type="text" name="company_name" required />
+            </label>
+            <label class="field">
+              <span>Position</span>
+              <input type="text" name="position" required />
+            </label>
+            <label class="field">
+              <span>Location</span>
+              <input type="text" name="location" required />
+            </label>
+            <label class="field">
+              <span>CTC (annual, ₹)</span>
+              <input type="number" name="ctc" step="0.01" min="0" required />
+            </label>
+            <label class="field">
+              <span>Visiting date</span>
+              <input type="date" name="date_visiting" required />
+            </label>
+            <p class="form-msg" data-msg-for="companyForm"></p>
+            <button type="submit" class="btn btn--stamp">Add to the board</button>
+          </form>
+        </div>
+      </div>
+
+    </main>
+  </section>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>

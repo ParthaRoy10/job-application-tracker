@@ -5,6 +5,8 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 from datetime import date,datetime
 from decimal import Decimal
+from app.schemas import ApplicationStatus
+from sqlalchemy import Enum as SQLEnum
 
 class Base(DeclarativeBase):
     pass
@@ -17,10 +19,13 @@ class User(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     email: Mapped[str] = mapped_column(String(100), unique=True, nullable=False)
+    role : Mapped[str] = mapped_column(String(100),nullable=False,default="user")
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
     created_at: Mapped[datetime] = mapped_column(DateTime,server_default=func.now(), nullable=False)
+    
 
     applications:Mapped[list["Application"]] = relationship(back_populates="user")
+
 
 
 
@@ -31,7 +36,7 @@ class Application(Base):
     id:Mapped[int] = mapped_column(primary_key=True)
     user_id:Mapped[int] = mapped_column(ForeignKey("users.id"),nullable=False)
     company_id:Mapped[int] = mapped_column(ForeignKey("companies.id"),nullable=False)
-    status:Mapped[str] = mapped_column(String(50), nullable=False)
+    status:Mapped[ApplicationStatus] = mapped_column(SQLEnum(ApplicationStatus), nullable=False)
     date_applied:Mapped[date] = mapped_column(Date, nullable=False)
     created_at:Mapped[datetime] = mapped_column(DateTime, nullable=False,server_default=func.now())
     updated_at:Mapped[datetime] = mapped_column(DateTime, nullable=False,onupdate=datetime.now,server_default=func.now())
@@ -60,6 +65,15 @@ class Company(Base):
     created_at:Mapped[datetime] = mapped_column(DateTime, nullable=False,server_default=func.now())
 
     applications:Mapped[list["Application"]] = relationship(back_populates="company")
+    __table_args__=(
+        UniqueConstraint(
+            "company_name",
+            "location",
+            "position",
+            "ctc",
+            name="unique_company"
+        ),
+    )
 
 
 

@@ -116,6 +116,7 @@ def update_application(
 
     try:
         db.commit()
+        db.refresh(db_application)
     except SQLAlchemyError:
         db.rollback()
         raise HTTPException(
@@ -134,25 +135,25 @@ def delete_application(
     db: Session = Depends(get_db),
     current_user : User = Depends(get_current_user)
 ):
-    db_appliccation = db.query(Application).filter(
+    db_application = db.query(Application).filter(
         Application.id == application_id,
         Application.user_id == current_user.id
     ).first()
 
-    if db_appliccation is None:
+    if db_application is None:
         raise HTTPException(
             status_code=404,
             detail="Application not found"
         )
     try:
-        db.delete(db_appliccation)
+        db.delete(db_application)
         db.commit()
 
     except SQLAlchemyError:
         db.rollback()
         raise HTTPException(
             status_code= 500,
-            detail= "Not authorized"
+            detail= "Database Error"
         )
     return {
         "message" : "Successfully deleted the Application"

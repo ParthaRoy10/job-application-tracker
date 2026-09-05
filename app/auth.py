@@ -68,3 +68,9 @@ def get_current_user(
         )
 
     return db_user
+
+
+def get_priv(
+        user : User = Depends(get_current_user)
+):
+    return user.role

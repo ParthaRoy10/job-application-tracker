@@ -1,0 +1,424 @@
+/* ==========================================================
+   Tokens
+   ========================================================== */
+:root{
+  --board: #2F3D33;
+  --board-deep: #23302A;
+  --card: #F2ECD9;
+  --card-alt: #EAE2C8;
+  --ink: #2B2318;
+  --ink-soft: #5B5240;
+  --rule: #C9BFA0;
+
+  --brass: #C79A3B;
+  --brass-dark: #A87F2C;
+  --tack: #B23A2E;
+
+  --stamp-applied: #8A7F5E;
+  --stamp-active: #2A5C8A;
+  --stamp-rejected: #B23A2E;
+  --stamp-selected: #2F6B4F;
+
+  --font-display: "Fraunces", Georgia, serif;
+  --font-body: "Inter", system-ui, sans-serif;
+  --font-stamp: "Special Elite", monospace;
+
+  --radius-card: 3px;
+  --shadow-card: 0 10px 22px rgba(0,0,0,.28), 0 2px 4px rgba(0,0,0,.18);
+  --shadow-card-hover: 0 16px 30px rgba(0,0,0,.34), 0 4px 6px rgba(0,0,0,.2);
+}
+
+*{ box-sizing: border-box; }
+html,body{ height:100%; }
+body{
+  margin:0;
+  font-family: var(--font-body);
+  color: var(--ink);
+  background: var(--board);
+  -webkit-font-smoothing: antialiased;
+}
+
+.hidden{ display:none !important; }
+
+/* ==========================================================
+   Board (page background) — subtle felt texture via layered gradients
+   ========================================================== */
+.board{
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse at top left, rgba(255,255,255,.035), transparent 55%),
+    radial-gradient(ellipse at bottom right, rgba(0,0,0,.18), transparent 55%),
+    repeating-linear-gradient(0deg, rgba(0,0,0,.025) 0px, rgba(0,0,0,.025) 1px, transparent 1px, transparent 3px),
+    var(--board);
+}
+.board--center{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding: 32px 20px;
+}
+
+/* ==========================================================
+   Index cards (generic surface)
+   ========================================================== */
+.card{
+  position:relative;
+  background: var(--card);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  padding: 34px 32px 30px;
+}
+.card::before{
+  /* faint ruled lines, like a lined index card */
+  content:"";
+  position:absolute; inset: 64px 18px 18px;
+  background-image: repeating-linear-gradient(to bottom, transparent 0 27px, rgba(43,35,24,.06) 27px 28px);
+  pointer-events:none;
+  border-radius: 2px;
+}
+.tack{
+  position:absolute;
+  top:-9px; left:50%;
+  transform: translateX(-50%);
+  width:16px; height:16px;
+  border-radius:50%;
+  background: radial-gradient(circle at 35% 30%, #E4B65C, var(--brass) 55%, var(--brass-dark) 100%);
+  box-shadow: 0 3px 4px rgba(0,0,0,.4);
+}
+
+.card--auth{
+  width: 100%;
+  max-width: 400px;
+  transform: rotate(-0.6deg);
+}
+.card--form{ max-width: 480px; transform: rotate(-0.4deg); }
+
+/* ==========================================================
+   Brand / headings
+   ========================================================== */
+.brand{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.9rem;
+  margin: 6px 0 2px;
+  text-align:center;
+  letter-spacing: -0.01em;
+}
+.brand-sub{
+  text-align:center;
+  color: var(--ink-soft);
+  font-size:.92rem;
+  margin: 0 0 22px;
+  font-style: italic;
+  font-family: var(--font-display);
+}
+h2{
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.5rem;
+  margin: 0 0 4px;
+  color: var(--card);
+}
+.view-head{ margin-bottom: 22px; }
+.view-sub{ margin:0; color: rgba(242,236,217,.65); font-size:.92rem; }
+
+/* ==========================================================
+   Auth tabs
+   ========================================================== */
+.auth-tabs{
+  display:flex;
+  gap: 4px;
+  margin-bottom: 22px;
+  border-bottom: 1px solid var(--rule);
+}
+.auth-tab{
+  flex:1;
+  background:none;
+  border:none;
+  font-family: var(--font-body);
+  font-weight:600;
+  font-size:.88rem;
+  color: var(--ink-soft);
+  padding: 8px 4px 10px;
+  cursor:pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom:-1px;
+}
+.auth-tab.is-active{
+  color: var(--ink);
+  border-bottom-color: var(--tack);
+}
+
+/* ==========================================================
+   Forms
+   ========================================================== */
+.paper-form{ position:relative; z-index:1; }
+.field{
+  display:block;
+  margin-bottom: 18px;
+}
+.field span{
+  display:block;
+  font-size:.72rem;
+  font-weight:600;
+  color: var(--ink-soft);
+  margin-bottom: 4px;
+}
+.field input{
+  width:100%;
+  border:none;
+  border-bottom: 1px solid var(--rule);
+  background: transparent;
+  font-family: var(--font-body);
+  font-size: .98rem;
+  color: var(--ink);
+  padding: 4px 2px 8px;
+  outline:none;
+}
+.field input:focus{
+  border-bottom-color: var(--tack);
+}
+.field input:focus-visible{
+  outline: 2px solid var(--brass-dark);
+  outline-offset: 2px;
+}
+
+.form-msg{
+  min-height: 1.1em;
+  font-size:.82rem;
+  margin: -6px 0 12px;
+}
+.form-msg.is-error{ color: var(--stamp-rejected); }
+.form-msg.is-ok{ color: var(--stamp-selected); }
+
+/* ==========================================================
+   Buttons
+   ========================================================== */
+.btn{
+  font-family: var(--font-body);
+  font-weight:600;
+  font-size:.9rem;
+  border-radius: 2px;
+  padding: 10px 18px;
+  cursor:pointer;
+  border: 1px solid transparent;
+  transition: transform .12s ease;
+}
+.btn:active{ transform: translateY(1px); }
+.btn:focus-visible{ outline:2px solid var(--brass-dark); outline-offset:2px; }
+
+.btn--stamp{
+  width:100%;
+  background: var(--ink);
+  color: var(--card);
+  letter-spacing: .01em;
+}
+.btn--stamp:hover{ background:#3a2f20; }
+
+.btn--ghost{
+  background: transparent;
+  color: var(--card);
+  border-color: rgba(242,236,217,.35);
+}
+.btn--ghost:hover{ border-color: var(--card); }
+
+.btn--small{
+  padding: 6px 12px;
+  font-size:.78rem;
+  background: var(--ink);
+  color: var(--card);
+}
+.btn--small:hover{ background:#3a2f20; }
+
+.btn--danger{
+  background: transparent;
+  color: var(--stamp-rejected);
+  border-color: var(--stamp-rejected);
+}
+.btn--danger:hover{ background: rgba(178,58,46,.08); }
+
+/* ==========================================================
+   Top bar + folder tabs
+   ========================================================== */
+.topbar{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding: 22px 36px 0;
+  max-width: 1180px;
+  margin: 0 auto;
+}
+.brand-mark{
+  font-family: var(--font-display);
+  font-weight:600;
+  font-size: 1.3rem;
+  color: var(--card);
+}
+.topbar-right{ display:flex; align-items:center; gap:16px; }
+.user-greeting{ color: rgba(242,236,217,.75); font-size:.88rem; }
+
+.folder-tabs{
+  max-width: 1180px;
+  margin: 22px auto 0;
+  padding: 0 36px;
+  display:flex;
+  gap: 6px;
+}
+.folder-tab{
+  font-family: var(--font-body);
+  font-weight:600;
+  font-size:.85rem;
+  padding: 12px 20px 10px;
+  border:none;
+  border-radius: 6px 6px 0 0;
+  background: var(--board-deep);
+  color: rgba(242,236,217,.6);
+  cursor:pointer;
+  position:relative;
+  top:1px;
+}
+.folder-tab.is-active{
+  background: var(--card);
+  color: var(--ink);
+}
+
+.board-content{
+  max-width: 1180px;
+  margin: 0 auto;
+  background: rgba(0,0,0,.12);
+  padding: 34px 36px 60px;
+  min-height: 60vh;
+}
+
+.view{ display:none; }
+.view.is-active{ display:block; }
+
+/* ==========================================================
+   Card grid (companies / applications)
+   ========================================================== */
+.cards-grid{
+  display:grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 34px 26px;
+}
+.item-card{
+  padding-top: 30px;
+}
+.item-card:nth-child(3n+1){ transform: rotate(-1deg); }
+.item-card:nth-child(3n+2){ transform: rotate(0.8deg); }
+.item-card:nth-child(3n+3){ transform: rotate(-0.4deg); }
+.item-card:hover{
+  transform: translateY(-4px) rotate(0deg);
+  box-shadow: var(--shadow-card-hover);
+  transition: transform .16s ease, box-shadow .16s ease;
+  z-index: 2;
+}
+
+.item-title{
+  font-family: var(--font-display);
+  font-weight:600;
+  font-size: 1.15rem;
+  margin: 0 0 2px;
+  position:relative; z-index:1;
+}
+.item-position{
+  color: var(--ink-soft);
+  font-size:.9rem;
+  margin: 0 0 14px;
+  position:relative; z-index:1;
+}
+.item-meta{
+  list-style:none;
+  margin:0 0 18px;
+  padding:0;
+  font-size:.86rem;
+  color: var(--ink);
+  position:relative; z-index:1;
+}
+.item-meta li{
+  display:flex;
+  justify-content:space-between;
+  padding: 5px 0;
+}
+.item-meta li span:first-child{ color: var(--ink-soft); }
+.item-actions{
+  position:relative; z-index:1;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* Rubber-stamp status badge */
+.stamp{
+  display:inline-block;
+  font-family: var(--font-stamp);
+  font-size:.72rem;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  border: 2px solid currentColor;
+  border-radius: 40% 45% 42% 48% / 45% 40% 48% 42%;
+  transform: rotate(-6deg);
+  opacity: .88;
+  position:relative; z-index:1;
+  background: transparent;
+}
+.stamp--applied{ color: var(--stamp-applied); }
+.stamp--active{ color: var(--stamp-active); }
+.stamp--rejected{ color: var(--stamp-rejected); }
+.stamp--selected{ color: var(--stamp-selected); }
+
+.status-select{
+  font-family: var(--font-body);
+  font-size:.78rem;
+  font-weight:600;
+  color: var(--ink);
+  background: var(--card-alt);
+  border: 1px solid var(--rule);
+  border-radius: 3px;
+  padding: 5px 6px;
+}
+
+.empty-note{
+  color: rgba(242,236,217,.7);
+  font-style: italic;
+  font-family: var(--font-display);
+}
+
+/* ==========================================================
+   Toast
+   ========================================================== */
+.toast{
+  position: fixed;
+  left: 50%;
+  bottom: 28px;
+  transform: translateX(-50%);
+  background: var(--ink);
+  color: var(--card);
+  font-size:.88rem;
+  padding: 12px 20px;
+  border-radius: 4px;
+  box-shadow: 0 8px 20px rgba(0,0,0,.35);
+  z-index: 50;
+  max-width: 90vw;
+}
+.toast.is-error{ background: var(--stamp-rejected); }
+.toast.is-ok{ background: var(--stamp-selected); }
+
+/* ==========================================================
+   Responsive
+   ========================================================== */
+@media (max-width: 640px){
+  .topbar{ flex-direction:column; align-items:flex-start; gap:10px; padding: 18px 20px 0; }
+  .folder-tabs{ padding: 0 20px; overflow-x:auto; }
+  .board-content{ padding: 24px 20px 44px; }
+  .cards-grid{ grid-template-columns: 1fr; }
+  .card--auth, .card--form{ padding: 28px 20px 24px; }
+}
+
+/* Reduced motion */
+@media (prefers-reduced-motion: reduce){
+  *{ transition: none !important; }
+}
