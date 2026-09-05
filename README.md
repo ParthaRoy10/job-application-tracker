@@ -146,15 +146,3 @@ python -m http.server 5500
 
 Open `http://localhost:5500`. See `frontend/README.md` for details, and
 `DEPLOYMENT.md` for putting this somewhere public.
-
-## Roadmap
-
-Tracked from the original requirements doc, not yet built:
-
-- Return `role` from `/users/me` so the frontend can hide admin-only actions
-  instead of just surfacing the backend's 403.
-- Promote `position` from a string field on `Company` into its own entity
-  (one company can offer several roles).
-- Extra application statuses: `SHORTLISTED`, `INTERVIEW`, `WITHDRAWN`.
-- Tests (pytest + a test database) and a CI workflow.
-- Dockerize both services.
